@@ -5,16 +5,17 @@ export interface Props {
   value: string;
   isPassword?: boolean;
   placeholder?: string;
-  passedRef?: React.RefObject<TextInput>;
+  ref?: React.RefObject<TextInput>;
   handleInput: (text: string) => void;
 }
 
-const Input: React.FC<Props> = props => {
+const Input: React.FC<Props> = React.forwardRef((props, ref) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.textInput}
-        ref={props.passedRef}
+        // ref={props.passedRef}
+        ref={ref}
         secureTextEntry={props.isPassword}
         placeholder={props.placeholder}
         value={props.value}
@@ -22,7 +23,7 @@ const Input: React.FC<Props> = props => {
       />
     </View>
   );
-};
+});
 
 export default Input;
 

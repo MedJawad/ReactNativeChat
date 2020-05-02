@@ -1,38 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 import Input from '../components/Input';
-import {login} from '../Auth/auth';
-import {useRef} from 'react';
-import firebase from 'react-native-firebase';
+import {loginUser, checkAuth} from '../actions/auth';
+// import deviceStorage from '../helpers/deviceStorage';
 
 const AuthScreen = props => {
+  const auth = useSelector(state => state.authUser);
+
+  if (auth.status === 'LOGGED_IN') props.navigation.navigate('Home');
+
+  const dispatch = useDispatch();
   const myInput = useRef(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const handleSubmit = () => {
-    // login({username, password});
-    // setTimeout(() => props.navigation.navigate('Home'), 100);
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => this.props.navigation.navigate('Main'))
-      .catch(error => this.setState({errorMessage: error.message}));
+    dispatch(loginUser({email, password}));
     myInput.current.blur();
-    setUsername('');
+    setEmail('');
     setPassword('');
   };
   return (
     <View style={styles.container}>
       <View style={styles.formContainer}>
+        {false && (
+          <View style={styles.errorContainer}>
+            <Text style={styles.bigText}>{error}</Text>
+          </View>
+        )}
         <Text style={styles.bigText}>Authenticate</Text>
         <Input
-          passedRef={myInput}
+          ref={myInput}
           placeholder="Email"
           value={email}
           handleInput={setEmail}
         />
         <Input
-          passedRef={myInput}
+          ref={myInput}
           isPassword
           placeholder="Password"
           value={password}
@@ -73,4 +78,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   button: {},
+  errorContainer: {
+    backgroundColor: 'red',
+    textAlign: 'center',
+  },
 });

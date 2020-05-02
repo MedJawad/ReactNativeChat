@@ -47,7 +47,7 @@ const MainScreen = () => {
           }}
         />
       </Animated.View>
-      <View style={styles.footButton}>
+      {/* <View style={styles.footButton}>
         <Button
           title="Reset"
           onPress={() => {
@@ -57,7 +57,7 @@ const MainScreen = () => {
             }).start();
           }}
         />
-      </View>
+      </View> */}
     </View>
   );
 };
