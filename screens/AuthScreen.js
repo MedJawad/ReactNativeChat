@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import Input from '../components/Input';
 import {loginUser, checkAuth} from '../actions/auth';
 // import deviceStorage from '../helpers/deviceStorage';
+import RNBootSplash from 'react-native-bootsplash';
 
 const AuthScreen = props => {
   const auth = useSelector(state => state.authUser);
@@ -14,7 +15,11 @@ const AuthScreen = props => {
   const myInput = useRef(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  RNBootSplash.hide();
 
+  useEffect(() => {
+    RNBootSplash.hide();
+  }, []);
   const handleSubmit = () => {
     dispatch(loginUser({email, password}));
     myInput.current.blur();

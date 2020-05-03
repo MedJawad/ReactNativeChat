@@ -8,7 +8,7 @@ export interface HeaderProps {
 const Header: React.FC<HeaderProps> = props => {
   return (
     <View style={styles.container}>
-      <Icon name="home" type="material" />
+      {/* <Icon name="home" type="material" /> */}
       <Text style={styles.bigText}>{props.title}</Text>
     </View>
   );
@@ -19,7 +19,7 @@ export default Header;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1ec28f',
-    flex: 1,
+    justifyContent: 'center',
   },
   bigText: {
     color: 'white',

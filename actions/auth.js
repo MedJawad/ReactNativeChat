@@ -13,8 +13,8 @@ const begin = () => {
 const success = data => {
   return {type: AUTH.SUCCESS, status: 'success', data};
 };
-const error = err => {
-  return {type: AUTH.ERROR, status: 'error', error: err};
+const error = error => {
+  return {type: AUTH.ERROR, status: 'error', error};
 };
 const logout = () => {
   return {type: AUTH.LOGOUT};
@@ -51,6 +51,7 @@ export function loginUser({email, password}) {
         dispatch(success(res.data));
         console.log(res);
         deviceStorage.saveItem('jwt', res.data.idToken);
+        deviceStorage.saveItem('email', res.data.email);
       })
       .catch(err => {
         dispatch(error('Request failed'));
@@ -63,14 +64,17 @@ export function checkAuth() {
     dispatch(beginCheck());
     console.log('START Checking Auth');
 
-    return deviceStorage.getItem('jwt').then(jwt => {
-      jwt && dispatch(success({idToken: jwt}));
-    });
+    return deviceStorage.getItem('email').then(email =>
+      deviceStorage.getItem('jwt').then(jwt => {
+        jwt && dispatch(success({idToken: jwt, email: email}));
+      }),
+    );
   };
 }
 export function logoutUser() {
   return dispatch => {
     deviceStorage.removeItem('jwt');
+    deviceStorage.removeItem('email');
     dispatch(logout());
   };
 }

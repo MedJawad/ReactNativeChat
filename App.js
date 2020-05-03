@@ -4,17 +4,18 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {useDispatch, useSelector} from 'react-redux';
-
+import RNBootSplash from 'react-native-bootsplash';
 import AuthScreen from './screens/AuthScreen';
 import Hello from './components/Hello';
 import HomeScreen from './screens/HomeScreen';
 import Loading from './screens/Loading';
 import {checkAuth} from './actions/auth';
+import ChatRoomScreen from './screens/ChatRoomScreen';
 
 const Stack = createStackNavigator();
 const App = () => {
-  // const isAuthenticated = false;
-  // return <Hello name="Jawad" enthusiasmLevel={3} />;
+  RNBootSplash.show();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const App = () => {
           component={HomeScreen}
           options={{headerShown: false}}
         />
+        <Stack.Screen name="ChatRoom" component={ChatRoomScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
