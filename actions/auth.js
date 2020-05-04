@@ -49,13 +49,18 @@ export function loginUser({email, password}) {
       )
       .then(res => {
         dispatch(success(res.data));
-        console.log(res);
+        // console.log(res);
         deviceStorage.saveItem('jwt', res.data.idToken);
         deviceStorage.saveItem('email', res.data.email);
+        const expirationTime =
+          Math.floor(Date.now() / 1000) + parseInt(res.data.expiresIn);
+        // console.log(expirationTime);
+
+        deviceStorage.saveItem('expirationTime', '' + expirationTime);
       })
       .catch(err => {
         dispatch(error('Request failed'));
-        // console.log(err);
+        console.log(err);
       });
   };
 }
@@ -63,18 +68,25 @@ export function checkAuth() {
   return function(dispatch) {
     dispatch(beginCheck());
     console.log('START Checking Auth');
-
-    return deviceStorage.getItem('email').then(email =>
-      deviceStorage.getItem('jwt').then(jwt => {
-        jwt && dispatch(success({idToken: jwt, email: email}));
-      }),
-    );
+    deviceStorage.getItem('expirationTime').then(expirationTime => {
+      if (expirationTime < Math.floor(Date.now() / 1000)) {
+        return logoutUser();
+      } else {
+        return deviceStorage.getItem('email').then(email =>
+          deviceStorage.getItem('jwt').then(jwt => {
+            jwt && dispatch(success({idToken: jwt, email: email}));
+          }),
+        );
+      }
+    });
   };
 }
+
 export function logoutUser() {
   return dispatch => {
     deviceStorage.removeItem('jwt');
     deviceStorage.removeItem('email');
+    deviceStorage.removeItem('expirationTime');
     dispatch(logout());
   };
 }

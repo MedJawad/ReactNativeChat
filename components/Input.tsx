@@ -4,6 +4,7 @@ import {View, TextInput, StyleSheet} from 'react-native';
 export interface Props {
   value: string;
   isPassword?: boolean;
+  multiline?: boolean;
   placeholder?: string;
   ref?: React.RefObject<TextInput>;
   handleInput: (text: string) => void;
@@ -20,6 +21,7 @@ const Input: React.FC<Props> = React.forwardRef((props, ref) => {
         placeholder={props.placeholder}
         value={props.value}
         onChangeText={text => props.handleInput(text)}
+        multiline={props.multiline}
       />
     </View>
   );

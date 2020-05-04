@@ -6,11 +6,11 @@ export const loadMessages = async () => {
 
   return axios
     .get(
-      `https://chatapp-aa089.firebaseio.com/messages.json?auth=${AUTH_TOKEN}`,
+      `https://chatapp-aa089.firebaseio.com/messages.json?orderBy="time"&limitToLast=20&auth=${AUTH_TOKEN}`,
     )
     .then(res => {
-      console.log(res);
-      return res.data;
+      // console.log(res);
+      return Object.values(res.data);
     })
     .catch(err => {
       console.log(err);
@@ -26,7 +26,7 @@ export const getCurrentUser = async () => {
       `    https://chatapp-aa089.firebaseio.com/users.json?orderBy="email"&equalTo="${AUTH_EMAIL}"&auth=${AUTH_TOKEN}`,
     )
     .then(res => {
-      console.log(res);
+      // console.log(res);
       return res.data;
     })
     .catch(err => {
@@ -39,6 +39,8 @@ export const sendMessage = async messageInput => {
 
   const user = await getCurrentUser().then(data => Object.keys(data)[0]);
 
+  // console.log(messageInput, user);
+
   const config = {
     headers: {
       'Content-Type': 'text/plain',
@@ -48,18 +50,15 @@ export const sendMessage = async messageInput => {
   return axios
     .post(
       `https://chatapp-aa089.firebaseio.com/messages.json?auth=${AUTH_TOKEN}`,
-      //   `{
-      //       "content" : "${messageInput}",
-      //       "user": "${user}",
-      //   }`,
       `{
-        "content" : "Wahya",
-        "user": "jawad"
+        "content" : "${messageInput}",
+        "user": "${user}",
+        "time": "${'' + Date.now()}"
     }`,
       config,
     )
     .then(res => {
-      console.log(res);
+      // console.log(res);
       return res.data;
     })
     .catch(err => {
